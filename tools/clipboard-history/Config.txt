@@ -1,0 +1,407 @@
+;===================定型文メニュー１===================
+;テンプレートとなっていますので、カスタマイズしてお使いください。詳細は Help.html の【定型文の編集】をご覧ください
+;■で始まる項目は、選択されているテキスト（非選択時はクリップボードの文字列）に対して実行する項目です
+
+@NoteHotkey=!c
++office(&C)
+	おはようございます。本日テレワークです。
+	テレワーク終了します。お疲れ様でした。
+	+昼休憩
+		今から昼休憩入ります
+	..
+..
++AWS(&W)
+	AWS_ACCESS_KEY_ID(minio) | AKIAIOSFODNN7EXAMPLE 
+	AWS_SECRET_ACCESS_KEY(minio) | wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+	..
+..
++GIT
+	git remote prune origin | git remote prune origin
+..
+..
+..
++個人情報(&P)
+	〒123-4567 ＯＯＯ県ＯＯＯ市ＯＯＯ町ＯＯＯ
+	末尾にタブ	`
+	メールアドレス(&M)... | xxx@xx.xxx.or.jp
+	複数行`r`nサンプル１
+	複数行サンプル２... |
+		==============================================
+		Name:      --- ---
+		E-Mail:    xxx@xx.xxx.or.jp
+		Home Page: http://-----
+		==============================================
+		/E
+	+サブメニュー内サブメニュー
+		http://www.xxx.co.jp
+	..
+..
++日付・時刻(&D)
+	yyyyMMdd			|| Date
+	yyyy/MM/dd			|| Date
+	yyyy/MM/dd HH:mm:ss		|| Date
+	yyyy-MM-dd(ddd)		|| Date
+	yyyy年M月d日(dddd)		|| Date
+	ddd, dd MMM yyyy HH:mm:ss +0900	|| Date | L0x0409
+	year:"~y~" month:~~~M~~~	|| Date
+	yyyy/MM/dd(和暦)		|| Date || StrReplace | 和暦 | ggyyyy || Date | D4
+	1週間と40時間後の5分100秒前	| MM/dd HH:mm:ss | Date | +D7 +H40 +M-5 +S-100
+	複数行の日付...			|
+					Y:~yyyy~
+					M:~MM~
+					D:~dd~
+					/E
+					| Date
+..
+*記号(&1) | -1
+	㊤|㊦|㊧|㊨||㈱|㈲|㈹||㍾|㍽|㍼|㍻|㋿
+	---
+	↑|↓|←|→||…|‥|―|～|／|＼|￣|＿
+	---
+	№|℡|㏍|㌍||【】|『』|〈〉|《》|〔〕|［］|‘’|“”
+	---
+	◆|■|▲|▼|★|●||◇|□|△|▽|☆|○
+	---
+	〒|※|§|¶|♭|♪|♂|♀|⇒|⇔|〆|仝|々
+	---
+	①|②|③|④|⑤|⑥|⑦|⑧|⑨|⑩
+	--
+	Ⅰ|Ⅱ|Ⅲ|Ⅳ|Ⅴ|Ⅵ|Ⅶ|Ⅷ|Ⅸ|Ⅹ
+..
+-
++■テキスト修飾(&T)
+	> 引用記号		|| RegExReplace | m)^ | > `
+	// コメント		|| RegExReplace | m)^ | // `
+	/* コメント */		|| RegExReplace | s).+ | /* $0 */
+	<!-- HTMLコメント -->	|| RegExReplace | s).+ | <!-- $0 -->
+	-
+	> 引用記号の削除	|| RegExReplace | m)^> `|^>
+	// コメントの削除	|| RegExReplace | m)^// `|^//
+	空行を削除		|| RegExReplace | m)^[\r\n]+
+	改行を削除		|| RegExReplace | [\r\n]
+	-
+	(小かっこ)		|| RegExReplace | s).+ | ($0)
+	[角かっこ]		|| RegExReplace | s).+ | [$0]
+	各行を 【】 で囲む	|| RegExReplace | m)^.*$ | 【$0】
+	-
+	各行先頭に連番追加	|| AddLineNumber | : `
+	各行をセンタリング	|| AlignLine
+	各行の左右を装飾	|| AlignLine | 1 | 60 | =
+	各行を右寄せ		|| AlignLine | 2
+	-
+	改行整形(36文字)		|| FormatLine | 36
+	改行整形(36文字+ぶら下げ)	|| FormatLine | 36 | ,,,.,、,。,，,．,？,！,）,」,』,!,),?,\,]
+	-
+	行ソート		|| Sort
+	行ソート(逆順)		|| Sort | R
+	行ソート(重複行削除)	|| Sort | U
+..
++■テキスト変換(&U)
+	大文字に変換		|| RegExReplace | s).+ | $U{0}
+	小文字に変換		|| RegExReplace | s).+ | $L{0}
+	単語の先頭のみ大文字に	|| RegExReplace | \b([a-zA-Z])((\w`|')*)\b | $U{1}$L{2}
+	-
+	半角に変換		|| SingleStr
+	全角に変換		|| DoubleStr
+	-
+	カタカナ→ひらがな変換	|| HiraStr
+	ひらがな→カタカナ変換	|| KataStr
+	-
+	URLエンコード		|| EncodeURL
+	URLデコード		|| EncodeURL | 1
+	-
+	Base64エンコード	|| EncodeBase64
+	Base64デコード		|| EncodeBase64 | 1
+	Base64デコード(バイナリ)|| EncodeBase64 | 1 | Binary
+	-
+	文字列→Unicodeエスケープ	|| UnicodeEscape
+	Unicodeエスケープ→文字列	|| UnicodeEscape | 1
+	-
+	文字列→HTML数値文字参照	|| UnicodeEscape | 0 | H
+	HTML数値文字参照→文字列	|| UnicodeEscape | 1 | H
+	-
+	Unicode正規化(NFC)	|| NormalizeStr
+	-
+	10⇔0x16進数相互変換	|| ConvertHex
+	10→0x16進数変換	|| ConvertHex | 0x16
+	10→16進数変換		|| ConvertHex | 16
+	16→10進数変換		|| ConvertHex | 10
+	-
+	暗号化			|| Encrypt | ~INPUT
+	復号			|| Encrypt | ~INPUT | 1
+	-
+	HTML エスケープ		|| StrReplaceEx | &,<,>," | &amp;,&lt;,&gt;,&quot;
+	行末に<br>を追加	|| RegExReplace | m)$ | <br>
+	-
+	任意の文字を置き換え	|| RegExReplace | ~INPUT | ~INPUT
+..
+-
++ファイル関連(&F)
+	ファイルを開く...	|| Run | *.*
+	-
+	Help.htmlを開く		|| Run | Help.html
+	URLを開く		|| Run | https://blank-note.sakura.ne.jp/
+	-
+	C:\			| C:\ | FileMenu
+	-
+	ファイルのフルパス名...	|| FilePath
+	フォルダのフルパス名...	|| FolderPath
+	-
+	ファイルの差し込み...	|| PasteFile
+	指定ファイルの差し込み	| ReadMe.txt | PasteFile
+	-
+	■ファイルに追記...	|| AppendFile | `r`n
+	■指定ファイルに追記	|| AppendFile | `r`n------------------`r`n | ~BLANK | memo.txt
+	■ファイルを上書き...	|| AppendFile | ~BLANK | ~BLANK | ~BLANK | UTF-8 | delete
+	-
+	ファイルリスト作成...		|| FileList
+	ファイルツリー作成...		|| FileList | T
+	フォルダツリー作成...		|| FileList | D T
+	ファイルリスト作成(*.txtのみ)...|| FileList | N | *.txt
+	-
+	ファイルのCRC32...	|| CRC32 | Binary
+	ファイルのSHA-256...	|| SHA256 | Binary
+	ファイルのMD5...	|| FilePath || RegExReplace | s).+ | CertUtil -hashfile "$0" MD5 || Run | ~BLANK | O || RegExReplace | m)^.+\:.*$ || RegExReplace | [ \r\n]
+	-
+	ファイルの暗号化...	|| Encrypt | ~INPUT | 0 | Binary
+	ファイルの復号...	|| Encrypt | ~INPUT | 1 | Binary
+	-
+	Base64エンコード(Data URI)	|| EncodeBase64 | 0 | Binary | 1
+..
++クリップボード関連(&C)
+	■分割コピー(改行区切り)			|| SplitCopy
+	■分割コピー(改行区切り+逆順)			|| SplitCopy | ~NULL | ~NULL | R
+	■分割コピー(タブ区切り)			|| SplitCopy | `	`
+	-
+	■履歴に追加					|| AddHistory
+	■キープ					|| Keep
+	-
+	クリップボード履歴				|| OpenHistory
+	クリップボードマネージャーを開く...		|| OpenManager
+	-
+	現在のクリップボードをクリア			|| <#blank,#clip>
+	現在のクリップボードの内容をプレーンテキストとして貼り付け	|| <#clip,#paste>
+	■現在のクリップボードと選択範囲を入れ替える	|| <#clip,#paste> || KeyStroke | ^{x} | Macro
+	-
+	クリップボード履歴をクリア			|| ClearHistory
+	クリップボード履歴を確認せずにクリア		|| ClearHistory | 0
+	-
+	キープ中の履歴をクリア				|| ClearKeep
+	キープ中の履歴を確認せずにクリア		|| ClearKeep | 0
+	-
+	クリップボード履歴の整理:100番目以降の履歴を削除		|| CompactHistory | 100 | 0   | 0
+	クリップボード履歴の整理:500文字以上の履歴を削除		|| CompactHistory | 0   | 500 | 0
+	クリップボード履歴の整理:重複する履歴を削除＆件数を999件に制限	|| CompactHistory | 1000 | 0 | 1
+	-
+	クリップボード履歴を書き出し			|| ExportHistory || AppendFile | ~BLANK | ~BLANK | ~BLANK | UTF-8 | delete
+	1-10番目の履歴を連結して貼り付け		|| ExportHistory | ~NULL | 1-10
+..
++設定関連(&O)
+	ダイレクトペーストON/OFF		|| DirectMode
+	ダイレクトペーストON			|| DirectMode | 1
+	ダイレクトペーストOFF			|| DirectMode | 0
+	-
+	FIFO ペーストON/OFF			|| FifoMode
+	FIFO ペーストON				|| FifoMode | 1
+	LIFO ペーストON/OFF			|| LifoMode
+	LIFO ペーストON				|| LifoMode | 1
+	FIFO/LIFO ペーストOFF			|| FifoMode | 0
+	-
+	ホットキーのサスペンドON/OFF		|| SuspendHotkey
+	ホットキーのサスペンド			|| SuspendHotkey | 1
+	ホットキーのサスペンド解除		|| SuspendHotkey | 0
+	-
+	クリップボード履歴のサスペンドON/OFF	|| SuspendHistory
+	クリップボード履歴をサスペンド		|| SuspendHistory | 1
+	クリップボード履歴のサスペンドを解除	|| SuspendHistory | 0
+	-
+	テキストコピー時の自動処理OFF		|| OnCopy
+	テキストコピー時の自動処理１ON/OFF	|| OnCopy | 1
+	テキストコピー時の自動処理２ON		|| OnCopy | 2 | 1
+	テキスト貼付時の自動処理１ON/OFF	|| OnPaste | 1
+	-
+	設定画面を開く				|| OpenConfig
+	『履歴の取得タイミング』を切り替える	|| Config | RecordMethod
+	現在の設定ファイルを読み込み直す	|| Reload
+	プロファイル切り替え-Config.txt		|| Reload | Config.txt
+	プロファイル切り替え-ConfigB.txt	|| Reload | ConfigB.txt
+	-
+	アプリを終了				|| Exit
+..
+-
+キーストローク(&K)		| username{Tab}password | KeyStroke
+ランダム文字列生成(&N)		|| RandomStr | 8
+マウスカーソル位置の色(&R)	|| ColorPicker
+式を入力して計算(&I)		|| <#blank> || Calc
+■選択テキストを計算(&S)	|| Calc
+■選択テキストの文字数(&L)	|| StrLen
+-
+■Googleで検索(&G)		|| <#copy> || StrReplace | # | %23 || RegExReplace | ^ | https://www.google.co.jp/search?hl=ja&lr=lang_ja&q= || Run
+-
+定型文の一覧・検索(&E)...	|| OpenManager | 1
+-
++高度な使い方(&X)
+	■Perlで選択テキストを変換					|| Run | test.pl | I O
+	■半角カタカナを全角に＆数字を半角に＆英字を大文字に変換	|| DoubleStr | K || SingleStr | D || RegExReplace | s).+ | $U{0}
+	-
+	クリップボード履歴メニューから選んで引用記号を付けて貼り付け	|| OpenHistory || RegExReplace | m)^ | > `
+	履歴の一覧・検索(ワードリスト付)...				| `n犬`n猫`nモルモット | OpenManager
+	指定の単語リストで定型文を検索...				| ＯＯＯ県`n東京都`n大阪府 | OpenManager | 1
+	-
+	Ctrl+Vで指定の文字列をFIFOペースト		| 項目１`n項目２`n項目３`n項目４ || FifoMode | 1 || SplitCopy
+	文字列を貼り付け後カーソルを移動		| [] | PasteStr || KeyStroke | {Left} | Macro
+	-
+	パスワード『pass』でメニューファイル中の暗号を復号して貼り付け	| 2AKmCDn8JgsWy7 | Encrypt | ~INPUT | 1
+	-
+	カーソル行の行頭を●でマーク			|| <,#line> || RegExReplace | ^[○●]`|^ | ●
+	カーソル行の行頭を○でマーク			|| <,#line> || RegExReplace | ^[○●]`|^ | ○
+	-
+	ファイルを読み込んで20桁に整形して貼り付け	|| PasteFile || FormatLine | 20 | ,,,.,、,。,，,．,？,！,）,」,』,!,),?,\,]
+	5-10番目の履歴からURLを削除してファイルに保存	|| ExportHistory | `r`n-----------`r`n | 5-10 || RegExReplace | http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)? | ~BLANK || AppendFile | ~BLANK | ~BLANK | ~BLANK | UTF-8 | delete
+	カーソル行を式と見なして計算し答えに置き換える	|| <#cut,#line,#paste> || Calc
+	計算式を入力して答えを貼り付け...		|| <#input,#paste> || Calc
+	時分秒を足した数をクリップボードに送る		| HH+mm+ss | <,#clip> || Date | L0x0409 || Calc
+	現在時刻を全角でツールチップで2秒表示		| yyyy年M月d日ddd曜日`r`ntth時m分s秒 | Date || DoubleStr || ToolTip | ~BLANK | 2000
+	文章中の全文字数から原稿料を計算		|| <#copy,#all,#msgbox> || RegExReplace | [\r\n] || StrLen || RegExReplace | $ | *5 || Calc || RegExReplace | $ | 円
+	エクスプローラーで選択中のファイル名を全角に変更|| KeyStroke | {F2}^{c} | Macro || Wait | 200 || <%Clipboard%> || StrReplaceEx | %Clipboard% || DoubleStr || PasteStr || KeyStroke | {Enter} | Macro
+..
+
+
+;===================定型文メニュー２～５===================
+;※デフォルトではキーが未割り当てです。設定画面から変更できます。
+
+@NoteHotkey=
+定型文メニュー2|メニューを使用する場合は、Config.txtのこの位置を編集してください|<,#msgbox>
+
+@NoteHotkey=
+定型文メニュー3|メニューを使用する場合は、Config.txtのこの位置を編集してください|<,#msgbox>
+
+@NoteHotkey=
+定型文メニュー4|メニューを使用する場合は、Config.txtのこの位置を編集してください|<,#msgbox>
+
+@NoteHotkey=
+定型文メニュー5|メニューを使用する場合は、Config.txtのこの位置を編集してください|<,#msgbox>
+
+;この位置に６番目以降の定型文メニューを追加できます
+
+
+;===================ダイレクトキー１～５===================
+;※デフォルトではキーが未割り当てです。設定画面から変更できます。
+
+@DirectHotkey=
+||OpenManager
+
+@DirectHotkey=
+||OpenManager
+
+@DirectHotkey=
+||OpenManager
+
+@DirectHotkey=
+||OpenManager
+
+@DirectHotkey=
+||OpenManager
+
+;この位置に６番目以降のホットキーを追加できます
+
+
+;===================クリップボード履歴メニュー１～５===================
+
+@HistoryHotkey=#v
+@HistoryHotkey=Alt,400
+@HistoryHotkey=
+@HistoryHotkey=
+@HistoryHotkey=
+
+;この位置に６番目以降のホットキーを追加できます
+
+
+;===================テキストコピー時の自動処理===================
+;※追加・削除などのカスタマイズが可能です
+
+@DirectHotkey=ONCOPY
+各行先頭に > を挿入 || <#clip,#clip> || RegExReplace | m)^ | > ` || AddHistory
+
+@DirectHotkey=ONCOPY
+末尾の改行を削除 || <#clip,#clip> || RTrim | `r`n || AddHistory
+
+@DirectHotkey=ONCOPY
+テキストコピー時に音で通知 || SoundPlay
+
+@DirectHotkey=ONCOPY
+テキストコピー時にツールチップで通知 || <#clip> || RegExReplace | Ss)^(.{50}).+$ | $1 ... || ToolTip
+
+@DirectHotkey=ONCOPY
+[履歴のみ]分割コピー || <#clip> || SplitCopy || ChangeStr || AddHistory
+
+@DirectHotkey=ONCOPY
+[履歴を除く]各行先頭に > を挿入 || <#clip,#clip> || AddHistory || RegExReplace | m)^ | > `
+
+@DirectHotkey=ONCOPY
+改行を含む履歴を取得しない || <#clip> || RegExReplace | s).*\n.* || AddHistory
+
+@DirectHotkey=ONCOPY,0,EXCEL.EXE|OUTLOOK.EXE
+エクセルとアウトルック上で履歴を取得しない || <#blank> || AddHistory
+
+
+;===================テキスト貼り付け/クリップボード転送時の自動処理===================
+;※追加・削除などのカスタマイズが可能です
+
+@DirectHotkey=ONPASTE
+各行先頭に > を挿入 || <#clip,#clip> || RegExReplace | m)^ | > `
+
+@DirectHotkey=ONPASTE
+各行先頭に // を挿入 || <#clip,#clip> || RegExReplace | m)^ | // `
+
+@DirectHotkey=ONPASTE
+各行を " で囲む || <#clip,#clip> || RegExReplace | m)^.*$ | "$0"
+
+@DirectHotkey=ONPASTE
+各行先頭に 001: の連番を挿入 || <#clip,#clip> || AddLineNumber | : ` | 3
+
+@DirectHotkey=ONPASTE
+末尾の改行を削除 || <#clip,#clip> || RTrim | `r`n
+
+
+;///////////////以下基本設定。設定画面から変更されます//////////////
+@AddUtilityMenu=1
+@CloseMenuByHotkey=1
+@CompactHistoryOnExit=
+@DarkMode=1
+@DirectModKey=,0,0,,
+@EnableAccessKey=1
+@EncryptSaveFile=0
+@ExcludeEXE=
+@ExitFifoPaste=0,1,0
+@FifoHotkey=^v
+@FollowCursor=1
+@KeepAfterPaste=1,0
+@KeepOrderHistory=0,1,1,1
+@ManagerAlwaysOnTop=1
+@ManagerClearResult=1
+@ManagerColor=
+@ManagerDontAutoHide=0
+@ManagerFollowCursor=0
+@ManagerHideGrid=1
+@ManagerHideNumber=0
+@ManagerHideSearch=0
+@ManagerPreview=0
+@ManagerSize=350,405,50,0
+@ManagerTree=1,1,1,1
+@MaxHistoryCount=135
+@MaxHistoryLength=204800
+@MenuDir=
+@MenuLength=47
+@PasteMethod=^{v}
+@PreviewSize=
+@RecordMethod=0
+@RecordOnManager=0
+@RecordPath=0
+@SaveFile=ClipboardHistory.dat
+@SearchMode=-1
+@SimpleHistory=0
+@SimplePreview=0
+@StartRecord=1
+@SwapIcon=0
+@SwapShift=0

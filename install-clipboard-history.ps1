@@ -1,0 +1,1 @@
+# https://ftp.vector.co.jp/73/41/2750/ClipboardHistory_x64_190.zip
